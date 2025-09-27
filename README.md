@@ -50,7 +50,7 @@ A modern, interactive web application that generates witty puns with style. Buil
 4. Share your favorite puns
 
 ### Categories
-- **Dad Jokes**: Classic groan-worthy humor
+- **Dad Jokes**: Classic humor
 - **Food Puns**: Culinary comedy gold
 - **Animal Puns**: Creature-feature comedy
 - **Tech Puns**: Programming and technology humor
