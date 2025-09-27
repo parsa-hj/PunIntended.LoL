@@ -1,10 +1,8 @@
 # PunIntended.lol
 
-**The Ultimate Pun Generator - Where Every Joke is Absolutely Pun-derful!**
+A modern, interactive web application that generates witty puns with style. Built with pure HTML, CSS, and JavaScript.
 
-A modern, interactive web application that generates witty puns with style. Built with pure HTML, CSS, and JavaScript for maximum performance and compatibility.
-
-## ✨ Features
+## Features
 
 ### Core Functionality
 - **Smart Pun Generation**: 25+ carefully curated puns across 5 themed categories
@@ -19,12 +17,12 @@ A modern, interactive web application that generates witty puns with style. Buil
 - **Social Sharing**: Copy to clipboard or native share API support
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 
-### 🎁 Easter Eggs
+### Easter Eggs
 - **Konami Code**: Secret rainbow animation (↑↑↓↓←→←→BA)
 - **Hidden Shortcuts**: Spacebar for quick pun generation
 - **Dynamic Stats**: Gamified experience with growing statistics
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Any modern web browser (Chrome, Firefox, Safari, Edge)
@@ -35,7 +33,7 @@ A modern, interactive web application that generates witty puns with style. Buil
 2. Open in any web browser
 3. Start generating puns immediately!
 
-## 🛠️ Technical Details
+## Technical Details
 
 ### Built With
 - **HTML5**: Semantic markup and modern standards
@@ -43,7 +41,7 @@ A modern, interactive web application that generates witty puns with style. Buil
 - **Vanilla JavaScript**: No frameworks or dependencies
 - **Google Fonts**: Fredoka One and Open Sans typography
 
-## 📱 Usage
+## Usage
 
 ### Basic Usage
 1. Visit the website
@@ -58,7 +56,7 @@ A modern, interactive web application that generates witty puns with style. Buil
 - **Tech Puns**: Programming and technology humor
 - **Science Puns**: STEM-themed wordplay
 
-## 📊 Analytics & Tracking
+## Analytics & Tracking
 
 The app includes built-in engagement tracking:
 - **Puns Generated**: Total number of puns viewed
