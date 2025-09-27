@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PunIntended - The Ultimate Pun Generator</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Open+Sans:wght@400;600&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Open Sans", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      .background-elements {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .floating-emoji {
+        position: absolute;
+        font-size: 2rem;
+        opacity: 0.3;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        25% {
+          transform: translateY(-20px) rotate(5deg);
+        }
+        50% {
+          transform: translateY(-10px) rotate(-5deg);
+        }
+        75% {
+          transform: translateY(-15px) rotate(3deg);
+        }
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        position: relative;
+        z-index: 2;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .logo {
+        font-family: "Fredoka One", cursive;
+        font-size: 3.5rem;
+        color: white;
+        text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+        margin-bottom: 0.5rem;
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2),
+            0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        to {
+          text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2),
+            0 0 30px rgba(255, 255, 255, 0.5);
+        }
+      }
+
+      .subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.2rem;
+        font-weight: 400;
+      }
+
+      .pun-display {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 3rem 2rem;
+        margin: 2rem 0;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .pun-text {
+        font-size: 1.8rem;
+        color: #2c3e50;
+        text-align: center;
+        line-height: 1.4;
+        font-weight: 600;
+        position: relative;
+        z-index: 3;
+      }
+
+      .pun-category {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .generate-btn {
+        background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+        border: none;
+        border-radius: 50px;
+        padding: 1.5rem 3rem;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: white;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+      }
+
+      .generate-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
+      }
+
+      .generate-btn:active {
+        transform: translateY(-1px);
+      }
+
+      .generate-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .generate-btn:hover::before {
+        left: 100%;
+      }
+
+      .btn-text {
+        position: relative;
+        z-index: 2;
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .stat-item {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 1rem 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        color: white;
+        backdrop-filter: blur(10px);
+      }
+
+      .stat-number {
+        font-size: 1.8rem;
+        font-weight: 600;
+        display: block;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      .share-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        padding: 0.8rem 1.5rem;
+        color: white;
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+
+      .share-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .loading {
+        display: none;
+        font-size: 2rem;
+        color: #667eea;
+      }
+
+      .pun-enter {
+        animation: punEnter 0.8s ease-out;
+      }
+
+      @keyframes punEnter {
+        0% {
+          opacity: 0;
+          transform: scale(0.8) rotateY(90deg);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) rotateY(0deg);
+        }
+      }
+
+      .reaction-emojis {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .reaction-emoji {
+        font-size: 2rem;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        opacity: 0.7;
+      }
+
+      .reaction-emoji:hover {
+        transform: scale(1.3);
+        opacity: 1;
+      }
+
+      .reaction-emoji.clicked {
+        animation: bounce 0.5s ease;
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        60%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-20px);
+        }
+        80% {
+          transform: translateY(-10px);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .logo {
+          font-size: 2.5rem;
+        }
+        .pun-text {
+          font-size: 1.4rem;
+        }
+        .generate-btn {
+          padding: 1.2rem 2rem;
+          font-size: 1.1rem;
+        }
+        .stats {
+          gap: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background-elements"></div>
+
+    <div class="container">
+      <div class="header">
+        <h1 class="logo">PunIntended.lol</h1>
+        <p class="subtitle">Where every joke is absolutely pun-derful! 🎭</p>
+      </div>
+
+      <div class="pun-display">
+        <div class="pun-category">Dad Jokes</div>
+        <div class="pun-text" id="punText">
+          Ready for some pun-believable humor? Click the button below! 🎯
+        </div>
+        <div class="loading" id="loading">🎲</div>
+      </div>
+
+      <div class="reaction-emojis">
+        <span
+          class="reaction-emoji"
+          onclick="reactToPun('😂')"
+          title="Hilarious!"
+          >😂</span
+        >
+        <span
+          class="reaction-emoji"
+          onclick="reactToPun('😅')"
+          title="So bad it's good"
+          >😅</span
+        >
+        <span
+          class="reaction-emoji"
+          onclick="reactToPun('🤔')"
+          title="I don't get it"
+          >🤔</span
+        >
+        <span
+          class="reaction-emoji"
+          onclick="reactToPun('🙄')"
+          title="Eye roll worthy"
+          >🙄</span
+        >
+        <span
+          class="reaction-emoji"
+          onclick="reactToPun('💀')"
+          title="Dead from cringe"
+          >💀</span
+        >
+      </div>
+
+      <button class="generate-btn" onclick="generatePun()">
+        <span class="btn-text">Generate Epic Pun!</span>
+      </button>
+
+      <button class="share-btn" onclick="sharePun()">📤 Share This Pun</button>
+
+      <div class="stats">
+        <div class="stat-item">
+          <span class="stat-number" id="punsGenerated">0</span>
+          <span class="stat-label">Puns Generated</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="laughsCreated">0</span>
+          <span class="stat-label">Groans Created</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="cringe-level">0%</span>
+          <span class="stat-label">Cringe Level</span>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const puns = {
+        "Dad Jokes": [
+          "I told my wife she was drawing her eyebrows too high. She looked surprised! 🤨",
+          "Why don't scientists trust atoms? Because they make up everything! ⚛️",
+          "I'm reading a book about anti-gravity. It's impossible to put down! 📚",
+          "Did you hear about the mathematician who's afraid of negative numbers? He'll stop at nothing to avoid them! ➖",
+          "Why don't eggs tell jokes? They'd crack each other up! 🥚",
+        ],
+        "Food Puns": [
+          "I'm on a seafood diet. I see food and I eat it! 🍤",
+          "Why did the scarecrow win an award? He was outstanding in his field! 🌽",
+          "What do you call a fake noodle? An impasta! 🍝",
+          "I used to hate facial hair, but then it grew on me! 🧔",
+          "Why don't melons get married? Because they cantaloupe! 🍈",
+        ],
+        "Animal Puns": [
+          "What do you call a sleeping bull? A bulldozer! 🐂",
+          "Why don't elephants use computers? They're afraid of the mouse! 🐘",
+          "What do you call a fish wearing a bowtie? Sofishticated! 🐟",
+          "Why don't ants get sick? Because they have little anty-bodies! 🐜",
+          "What do you call a bear with no teeth? A gummy bear! 🐻",
+        ],
+        "Tech Puns": [
+          "Why do programmers prefer dark mode? Because light attracts bugs! 💻",
+          "How do you comfort a JavaScript bug? You console it! 🐛",
+          "Why did the developer go broke? Because he used up all his cache! 💰",
+          "What's a computer's favorite beat? An algo-rhythm! 🎵",
+          "Why don't keyboards ever get tired? They have built-in space bars! ⌨️",
+        ],
+        "Science Puns": [
+          "I have a joke about chemistry, but I don't think it would get a reaction! ⚗️",
+          "Why can't you trust an atom? Because they make up everything! ⚛️",
+          "What did the biologist wear to impress their date? Designer genes! 🧬",
+          "Why don't scientists trust stairs? Because they're always up to something! 🔬",
+          "How do you organize a space party? You planet! 🚀",
+        ],
+      };
+
+      let stats = {
+        punsGenerated: 0,
+        laughsCreated: 0,
+        currentPun: "",
+        currentCategory: "",
+      };
+
+      let usedPuns = new Set();
+
+      function createFloatingEmojis() {
+        const emojis = [
+          "😂",
+          "🤣",
+          "😄",
+          "🎭",
+          "🎪",
+          "🎨",
+          "🎯",
+          "💫",
+          "⭐",
+          "🌟",
+        ];
+        const container = document.querySelector(".background-elements");
+
+        for (let i = 0; i < 15; i++) {
+          const emoji = document.createElement("div");
+          emoji.className = "floating-emoji";
+          emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          emoji.style.left = Math.random() * 100 + "%";
+          emoji.style.top = Math.random() * 100 + "%";
+          emoji.style.animationDelay = Math.random() * 6 + "s";
+          emoji.style.animationDuration = 4 + Math.random() * 4 + "s";
+          container.appendChild(emoji);
+        }
+      }
+
+      function generatePun() {
+        const loading = document.getElementById("loading");
+        const punText = document.getElementById("punText");
+        const punDisplay = document.querySelector(".pun-display");
+        const categoryElement = document.querySelector(".pun-category");
+
+        // Show loading animation
+        punText.style.display = "none";
+        loading.style.display = "block";
+        loading.style.animation = "spin 0.5s linear infinite";
+
+        setTimeout(() => {
+          // Get all categories and puns
+          const categories = Object.keys(puns);
+          const availablePuns = [];
+
+          // Collect all unused puns
+          categories.forEach((category) => {
+            puns[category].forEach((pun) => {
+              const punId = `${category}:${pun}`;
+              if (!usedPuns.has(punId)) {
+                availablePuns.push({ category, pun });
+              }
+            });
+          });
+
+          // If all puns used, reset
+          if (availablePuns.length === 0) {
+            usedPuns.clear();
+            categories.forEach((category) => {
+              puns[category].forEach((pun) => {
+                availablePuns.push({ category, pun });
+              });
+            });
+          }
+
+          // Select random pun
+          const randomPun =
+            availablePuns[Math.floor(Math.random() * availablePuns.length)];
+          const punId = `${randomPun.category}:${randomPun.pun}`;
+          usedPuns.add(punId);
+
+          stats.currentPun = randomPun.pun;
+          stats.currentCategory = randomPun.category;
+
+          // Update display
+          punText.textContent = randomPun.pun;
+          categoryElement.textContent = randomPun.category;
+
+          // Hide loading, show pun with animation
+          loading.style.display = "none";
+          punText.style.display = "block";
+          punText.classList.add("pun-enter");
+
+          // Update stats
+          stats.punsGenerated++;
+          updateStats();
+
+          // Remove animation class after animation completes
+          setTimeout(() => {
+            punText.classList.remove("pun-enter");
+          }, 800);
+        }, 1000);
+      }
+
+      function reactToPun(emoji) {
+        const reactionEmoji = event.target;
+        reactionEmoji.classList.add("clicked");
+
+        // Create floating reaction
+        const floatingReaction = document.createElement("div");
+        floatingReaction.textContent = emoji;
+        floatingReaction.style.cssText = `
+                position: fixed;
+                font-size: 2rem;
+                z-index: 1000;
+                pointer-events: none;
+                left: ${event.clientX}px;
+                top: ${event.clientY}px;
+                animation: floatUp 1.5s ease-out forwards;
+            `;
+
+        document.body.appendChild(floatingReaction);
+
+        stats.laughsCreated++;
+        updateStats();
+
+        setTimeout(() => {
+          reactionEmoji.classList.remove("clicked");
+          floatingReaction.remove();
+        }, 1500);
+      }
+
+      function sharePun() {
+        if (stats.currentPun) {
+          const shareText = `${stats.currentPun}\n\nGenerated on PunIntended.lol - Where every joke is pun-derful! 🎭`;
+
+          if (navigator.share) {
+            navigator.share({
+              title: "Check out this pun!",
+              text: shareText,
+            });
+          } else {
+            navigator.clipboard.writeText(shareText).then(() => {
+              const shareBtn = document.querySelector(".share-btn");
+              const originalText = shareBtn.textContent;
+              shareBtn.textContent = "✅ Copied to clipboard!";
+              shareBtn.style.background = "rgba(46, 204, 113, 0.3)";
+
+              setTimeout(() => {
+                shareBtn.textContent = originalText;
+                shareBtn.style.background = "rgba(255,255,255,0.2)";
+              }, 2000);
+            });
+          }
+        }
+      }
+
+      function updateStats() {
+        document.getElementById("punsGenerated").textContent =
+          stats.punsGenerated;
+        document.getElementById("laughsCreated").textContent =
+          stats.laughsCreated;
+        const cringeLevel = Math.min(
+          stats.punsGenerated * 5 + stats.laughsCreated * 3,
+          100
+        );
+        document.getElementById("cringe-level").textContent = cringeLevel + "%";
+      }
+
+      // Add CSS for floating reaction animation
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes floatUp {
+                0% { transform: translateY(0) scale(1); opacity: 1; }
+                100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Initialize
+      createFloatingEmojis();
+
+      // Add keyboard shortcut
+      document.addEventListener("keydown", function (e) {
+        if (e.code === "Space" && !e.target.matches("input, textarea")) {
+          e.preventDefault();
+          generatePun();
+        }
+      });
+
+      // Add some Easter eggs
+      let konamiCode = [];
+      const konamiSequence = [
+        "ArrowUp",
+        "ArrowUp",
+        "ArrowDown",
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowLeft",
+        "ArrowRight",
+        "KeyB",
+        "KeyA",
+      ];
+
+      document.addEventListener("keydown", function (e) {
+        konamiCode.push(e.code);
+        if (konamiCode.length > konamiSequence.length) {
+          konamiCode.shift();
+        }
+
+        if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+          document.body.style.animation = "rainbow 2s ease-in-out";
+          setTimeout(() => {
+            document.body.style.animation = "";
+          }, 2000);
+        }
+      });
+
+      // Rainbow easter egg animation
+      const rainbowStyle = document.createElement("style");
+      rainbowStyle.textContent = `
+            @keyframes rainbow {
+                0% { filter: hue-rotate(0deg); }
+                100% { filter: hue-rotate(360deg); }
+            }
+        `;
+      document.head.appendChild(rainbowStyle);
+    </script>
+  </body>
+</html>
